@@ -6,16 +6,16 @@
     2025.1
 
 
-## KIT-P
+## KIT-A
 
-João da Silva
+Antonio Lucas Michelon de Almeida
 
-Pedro de Souza
+Pedro Nery Affonso dos Santos
 
 
 ## Entregas
 
-- [x] Roteiro 1 - Data 23/02/2025
+- [ ] Roteiro 1 
 - [ ] Roteiro 2
 - [ ] Roteiro 3
 - [ ] Roteiro 4
