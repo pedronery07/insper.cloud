@@ -4,9 +4,9 @@ Este repositório contém toda a documentação referente à elaboração dos ro
 
 Dupla: 
 
-Antonio Lucas Michelon de Almeida
+**Antonio Lucas Michelon de Almeida**
 
-Pedro Nery Affonso dos Santos
+**Pedro Nery Affonso dos Santos**
 
 ## Setup
 
