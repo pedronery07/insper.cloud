@@ -1,3 +1,13 @@
+## Relatório de Cloud: Grupo A
+
+Este repositório contém toda a documentação referente à elaboração dos roteiros da matéria de Computação em Nuvem, do sexto semestre de Engenharia da Computação no Insper.
+
+Dupla: 
+
+Antonio Lucas Michelon de Almeida
+
+Pedro Nery Affonso dos Santos
+
 ## Setup
 
 Para utilizar o código deste repositório, siga as instruções a seguir:
