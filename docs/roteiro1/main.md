@@ -31,9 +31,13 @@ Ao final deste roteiro, o objetivo principal é termos, portanto, uma Cloud com 
 
 ## Montagem do Roteiro
 
-Os pontos "tarefas" são os passos seguidos para a realização do roteiro. 
+<p align="justify">
+Todo roteiro apresenta uma primeira parte denonimnada <b>Infra</b> e uma segunda chamada de <b>App</b>.
+Os pontos <b>tarefas</b> dentro de cada parte são os passos seguidos para a realização do roteiro. 
+Este modelo de organização orientado por partes e tarefas será utilizado em <b>todos os roteiros</b>.
+</p>
 
-Este modelo de organização orientado por tarefas será utilizado em todos os roteiros.
+# Infra
 
 ## Tarefa 0: Endereços MAC das NUCs e IP do roteador
 
@@ -134,10 +138,12 @@ Após a conclusão de todos os passos da instalação, foi realizado um reboot d
 
 --- 
 
-## Tarefa 2: Instalação do MAAS
+## Tarefa 2: MAAS - acesso local
+
+### Instalação
 
 <p align="justify">
-Para a instalação do MAAS, optou-se pela versão 3.5.3. No terminal do Ubuntu Server, foram utilizados os comandos a seguir:
+Para a instalação do MAAS na NUC main (que agora tem um sistema operacional), optou-se pela versão 3.5.3. No terminal do Ubuntu Server, foram utilizados os comandos a seguir:
 </p>
 
 ``` bash
@@ -161,7 +167,11 @@ Após o teste feito com sucesso, foi realizado um acesso da NUC main via SSH com
 $ ssh cloud@172.16.0.3
 ```
 
-Dentro da rede local, o MAAS foi iniciazlido e criou-se o administrador cloud, que será necessário para poteriormente ser possível acessar o dashboard.
+### Configuração
+
+<p align="justify">
+Dentro da rede local, o MAAS foi inicializado e criou-se o administrador cloud, que será necessário para poteriormente ser possível acessar o dashboard. Antes da inicialização foi necessário realizar um <b>reboot</b>.
+</p>
 
 ``` bash
 $ sudo maas init region+rack --maas-url http://172.16.0.3:5240/MAAS --database-uri maas-test-db:///
@@ -177,16 +187,84 @@ $ ssh-keygen -t rsa
 $ cat ./.ssh/id_rsa.pub
 ```
 
-Utilizando o IP atribuído à NUC main e a porta padrão do MAAS, foi possível acessar o Dashboard via protocolo HTTP (http://172.16.0.3:5240/MAAS).
+<p align="justify">
+Utilizando o IP atribuído à NUC main e a porta padrão do MAAS, foi possível acessar o Dashboard via protocolo HTTP (http://172.16.0.3:5240/MAAS). O login foi realizado através do admin criado nos passos anteriores.
+</p>
 
 ![Tela do Dashboard do MAAS](./img/maas_dashboard.png)
 /// caption
 Dashboard do MAAS
 ///
 
-Conforme ilustrado acima, a tela inicial do MAAS apresenta um dashboard com informações sobre o estado atual dos servidores gerenciados. O dashboard é composto por diversos painéis, cada um exibindo informações sobre um aspecto específico do ambiente gerenciado. Os painéis podem ser configurados e personalizados de acordo com as necessidades do usuário.
+<p align="justify">
+Conforme ilustrado acima, a tela inicial do MAAS apresenta um dashboard com informações sobre o estado atual dos servidores gerenciados. O dashboard é composto por diversos painéis, cada um exibindo informações sobre um aspecto específico do ambiente gerenciado. 
+</p>
 
-## App
+<p align="justify">
+Utilizando a interface gráfica do Dashboard, primeiramente, foi configurado um <b>DNS</b> forwarder utilizando o DNS do Insper (Networking > DNS).
+</p>
+
+<p align="justify">
+Em seguida, foram importadas imagens do <b>Ubuntu 22.04 LTS</b> e <b>Ubuntu 20.04 LTS</b> em Configuration > Images > Ubuntu Releases e feito o <b>upload da chave copiada no terminal SSH</b>. 
+</p>
+
+<p align="justify">
+Por fim, foi passado o parâmetro kernel <b>net.ifnames=0</b> em Settings > Configuration > Kernel Parameters.
+</p>
+
+### Chaveando o DHCP
+
+<p align="justify">
+O DHCP (Dynamic Host Configuration Protocol) é um protocolo de rede que permite a configuração automática de dispositivos em uma rede IP. Ele é principalmente responsável por atribuir dinamicamente endereços IP, eliminando a necessidade de configuração manual, mas também pode assumir funções como, por exemplo, definir a máscara de sub-rede e fornecer servidores DNS.
+</p>
+
+<p align="justify">
+Até o momento, o dispositivo da nossa sub-rede contendo este protocolo é o roteador. Porém, nesta etapa isto foi modificado.
+</p>
+
+<p align="justify">
+Primeiramente, dentro do MAAS Controller, o DHCP foi habilitado na NUC Main e, conforme ilustra a imagem a seguir, o Reserved Range foi alterado para iniciar em 172.16.11.1 e acabar em 172.16.14.255.
+</p>
+
+![Configuração de intervalos de IPs](./img/reserve_range.jpg)
+/// caption
+Tela de configuração dos Reserved Ranges dentro do MAAS Controller
+///
+
+<p align="justify">
+Além disso, como mais de um dispositivo não pode conter o protocolo DHCP dentro de uma mesma sub-rede (mais de um dispositivo tentando atribuir um IP a outro dispositivo automaticamente), também foi necessário desativar o DHCP no roteador.
+</p>
+
+![Desativando DHCP do roteador](./img/dhcp_roteador.jpg)
+/// caption
+Tela de desabilitação do DHCP no roteador
+///
+
+A saúde do sistema também foi verificada a partir da página de Controladores no Dashboard, ilustrada a seguir.
+
+![Saúde do sistema MAAS](./img/saude_maas.jpg)
+/// caption
+Tela de verificação da saúde do sistema
+///
+
+### Comissionando servidores
+
+<p align="justify">
+Com o DHCP agora devidamente chaveado, os servers 1 a 5 foram cadastrados como machines no Dashboard do MAAS. 
+Para tanto, foram resgatados os endereços MAC capturados na Tarefa 0, alterada a opção <b>Power Type</b> para <b>Intel AMT</b>, configurada a senha `CloudComp6s!` para todos os servidores e o <b>IP 172.16.15.X</b> (X sendo o número do servidor configurado).
+</p>
+
+<p align="justify">
+Após a comissão automática, todos os nós apareceram com o status Ready e as especificações de armazenamento das NUCs foram confirmadas. Além disso, o <b>roteador foi adicionado como device</b>.
+</p>
+
+### OVS Bridge
+
+## Tarefa 3: MAAS - acesso remoto
+
+
+
+# App
 
 
 
