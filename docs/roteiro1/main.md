@@ -156,7 +156,7 @@ $ sudo snap install maas-test-db
 
 Para verificar o devido funcionamento do MAAS instalado, foram realizados dois testes com o comando ping, ilustrados na foto a seguir:
 
-![Tela de teste de funcionamento](./img/mass_test.jpg)
+![Tela de teste de funcionamento](./img/maas_test.jpg)
 /// caption
 Tela de teste de funcionamento por meio de pings
 ///
@@ -258,11 +258,57 @@ Para tanto, foram resgatados os endereços MAC capturados na Tarefa 0, alterada 
 Após a comissão automática, todos os nós apareceram com o status Ready e as especificações de armazenamento das NUCs foram confirmadas. Além disso, o <b>roteador foi adicionado como device</b>.
 </p>
 
+![Adicionando roteador como device](./img/roteador_device.jpg)
+/// caption
+Adicionando roteador como device
+///
+
 ### OVS Bridge
+
+<p align="justify">
+Antes de possibilitar o acesso remoto ao KIT, um passo final foi criar, para cada servidor, uma ponte Open vSwitch (OVS). Todas as pontes tiveram o nome "br-ex" atribuído a elas. A seguir, tem-se uma ilustração de como a bridge ficou configurada para o server 1, na interface do dashboard do MAAS.
+</p>
+
+![Bridge Server 1](./img/bridge_server1.jpg)
+/// caption
+Interface do Server 1 após a criação da ponte Open vSwitch (OVS)
+///
 
 ## Tarefa 3: MAAS - acesso remoto
 
+Para que seja possível acessar o KIT remotamente, e não mais através do cabo na rede local, é necessário realizar a criação de um gateway NAT. 
 
+<p align="justify">
+A intenção por trás do acesso remoto é que o computador seja capaz de conversar com o servidor main dentro da subrede configurada até agora apenas por meio de uma conexão com a Rede Wi-Fi do Insper. 
+</p>
+
+<p align="justify">
+O NAT é justamente o serviço que possibilita que dispositivos dentro de uma rede privada acessem redes externas (como a internet) através de um único endereço IP público. Ele traduz os endereços IP privados da subrede para o endereço IP do roteador ao enviar pacotes para fora da rede e realiza o processo inverso ao receber respostas, garantindo assim a comunicação adequada entre os dispositivos.
+</p>
+
+![Explicação acesso remoto](./img/explicacao_acesso_remoto.jpg)
+/// caption
+Ilustração teórica de funcionamento da subrede
+///
+
+Na ilustração acima, a linha tracejada verde representa a conexão entre um computador (que se encontra conectado à LAN do Insper) com a NUC main da subrede privada que foi configurada até o momento. 
+
+<p align="justify">
+Para que fosse estabelecida tal conexão, foram seguidas as instruções contidas no manual de uso do roteador do KIT para possibilitar o redirecionamento do dispositivo que tentasse se conectar à portas 22 (padrão SSH) e 5240 (padrão MAAS) a partir do IP público 10.103.1.10, que é o endereço do roteador fora da rede privada.
+</p>
+
+Ao final da configuração do NAT, portanto, a interface do roteador ficou da seguinte forma:
+
+![Configuração do NAT - Interface do roteador](./img/nat_config.jpg)
+/// caption
+Interface do roteador após a configuração do NAT
+///
+
+A partir deste momento, portanto, passou a ser possível conectar-se ao dashboard do MAAS e aos demais servidores por meio do seguinte comando SSH no terminal do computador:
+
+``` bash
+$ ssh cloud@10.103.1.10
+```
 
 # App
 
