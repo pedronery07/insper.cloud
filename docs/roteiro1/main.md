@@ -53,7 +53,7 @@ Essa ação ocorreu simultaneamente à Tarefa 1, pois, a partir da Tarefa 2, as 
 Além disso, foi realizado um pré-roteiro relativo à montagem de um cabo de rede. Com a conexão ethernet, foi acessada a interface do roteador do KIT e alterou-se o seu endereço de IP para 172.16.0.1. Mais detalhes sobre a escolha deste IP serão fornecidos na Tarefa 1. 
 </p>
 
-![Tela de configuração de IP do roteador e de subrede](./img/config_ip_roteador.jpg)
+![Tela de configuração de IP do roteador e de subrede](./img/config_ip_roteador.jpeg)
 /// caption
 Tela de configuração de IP do roteador e de máscara de subrede
 ///
@@ -191,7 +191,7 @@ $ cat ./.ssh/id_rsa.pub
 Utilizando o IP atribuído à NUC main e a porta padrão do MAAS, foi possível acessar o Dashboard via protocolo HTTP (http://172.16.0.3:5240/MAAS). O login foi realizado através do admin criado nos passos anteriores.
 </p>
 
-![Tela do Dashboard do MAAS](./img/maas_dashboard.png)
+![Tela do Dashboard do MAAS](./img/maas_dashboard.jpeg)
 /// caption
 Dashboard do MAAS
 ///
@@ -226,7 +226,7 @@ Até o momento, o dispositivo da nossa sub-rede contendo este protocolo é o rot
 Primeiramente, dentro do MAAS Controller, o DHCP foi habilitado na NUC Main e, conforme ilustra a imagem a seguir, o Reserved Range foi alterado para iniciar em 172.16.11.1 e acabar em 172.16.14.255.
 </p>
 
-![Configuração de intervalos de IPs](./img/reserve_range.jpg)
+![Configuração de intervalos de IPs](./img/reserved_range.jpeg)
 /// caption
 Tela de configuração dos Reserved Ranges dentro do MAAS Controller
 ///
@@ -235,14 +235,14 @@ Tela de configuração dos Reserved Ranges dentro do MAAS Controller
 Além disso, como mais de um dispositivo não pode conter o protocolo DHCP dentro de uma mesma sub-rede (mais de um dispositivo tentando atribuir um IP a outro dispositivo automaticamente), também foi necessário desativar o DHCP no roteador.
 </p>
 
-![Desativando DHCP do roteador](./img/dhcp_roteador.jpg)
+![Desativando DHCP do roteador](./img/dhcp_roteador.jpeg)
 /// caption
 Tela de desabilitação do DHCP no roteador
 ///
 
 A saúde do sistema também foi verificada a partir da página de Controladores no Dashboard, ilustrada a seguir.
 
-![Saúde do sistema MAAS](./img/saude_maas.jpg)
+![Saúde do sistema MAAS](./img/saude_maas.jpeg)
 /// caption
 Tela de verificação da saúde do sistema
 ///
@@ -269,7 +269,7 @@ Adicionando roteador como device
 Antes de possibilitar o acesso remoto ao KIT, um passo final foi criar, para cada servidor, uma ponte Open vSwitch (OVS). Todas as pontes tiveram o nome "br-ex" atribuído a elas. A seguir, tem-se uma ilustração de como a bridge ficou configurada para o server 1, na interface do dashboard do MAAS.
 </p>
 
-![Bridge Server 1](./img/bridge_server1.jpg)
+![Bridge Server 1](./img/bridge_server1.jpeg)
 /// caption
 Interface do Server 1 após a criação da ponte Open vSwitch (OVS)
 ///
@@ -299,7 +299,7 @@ Para que fosse estabelecida tal conexão, foram seguidas as instruções contida
 
 Ao final da configuração do NAT, portanto, a interface do roteador ficou da seguinte forma:
 
-![Configuração do NAT - Interface do roteador](./img/nat_config.jpg)
+![Configuração do NAT - Interface do roteador](./img/nat_config.jpeg)
 /// caption
 Interface do roteador após a configuração do NAT
 ///
