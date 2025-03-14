@@ -501,28 +501,63 @@ Comissioning do server 5
 
 Com as mudanças feitas na parte 2, ...
 
-### <b>Parte 4: Utilizando o Ansible - deploy automatizado de aplicação</b>
+### <b>Parte 4: Ansible - deploy automatizado de aplicação</b>
 
 <p align="justify">
-Vamos partir para uma abordagem diferente, mas primeiro vamos garantir algumas coisas:
+Vamos partir para uma abordagem diferente agora. Até o momento, temos apenas uma aplicação Django que foi instalada manualmente apenas no servidor 2. Contudo, é comum que uma mesma aplicação seja alocada em mais de uma máquina, pois podemos dividir a carga de acesso entre os nós e, além disso, se um node cair o outro está no ar, para que nosso cliente acesse.
 </p>
 
-**Tarefa 4.1) De um print da tela do Dashboard do MAAS com as 3 Máquinas e seus respectivos IPs.**
+<p align="justify">
+Dessa forma, nesta parte foi criada uma segunda aplicação Django no servidor 3 que compartilha com o servidor 2 o mesmo banco de dados criado no servidor 1. Porém, em vez de realizar os mesmos passos da instalação manual feita na parte 2, optou-se por utilizar o Ansible, um gerenciador de deploy que traz benefícios que serão detalhados mais adiante.
+</p>
 
-**Tarefa 4.2) De um print da aplicação Django, provando que você está conectado ao server2**
+<p align="justify">
+Após feito o deploy do terceiro servidor, o Ansible foi instalado na MAIN e um playbook foi criado no nó 3 para a instalação do Django. Os comandos utilizados foram:
+</p>
 
-**Tarefa 4.3) De um print da aplicação Django, provando que você está conectado ao server3**
+``` bash
+$ sudo apt install ansible # Instalação do Ansible
+
+$ wget https://raw.githubusercontent.com/raulikeda/tasks/master/tasks-install-playbook.yaml # Playbook do Ansible
+
+$ ansible-playbook tasks-install-playbook.yaml --extra-vars server=[IP server3] # Instalação do playbook na máquina 3
+```
+
+**Tarefa 4.1) Print da tela do Dashboard do MAAS com as 3 Máquinas e seus respectivos IPs.**
+
+![Dashboard: 3 Máquinas e IPs](./img/tarefa4_1.png)
+/// caption
+Dashboard do MaaS com os três servidores com deploy feito e seus respectivos IPs
+///
+
+**Tarefa 4.2) Print da aplicação Django, provando a conexão com o server2**
+
+![Aplicação Django - conexão com server 2](./img/tarefa4_2.png)
+/// caption
+Aplicação Django funcionando localmente via servidor 2
+///
+
+**Tarefa 4.3) Print da aplicação Django, provando a conexão com o server3**
+
+![Aplicação Django - conexão com server 3](./img/tarefa4_3.png)
+/// caption
+Aplicação Django funcionando localmente via servidor 3
+///
 
 **Tarefa 4.4) Diferença entre instalar manualmente a aplicação Django e utilizando o Ansible**
 
-## <b>Questionário, Projeto ou Plano</b>
+<p align="justify">
+A diferença principal entre instalar manualmente uma aplicação Django em um host e utilizar o Ansible está na automação, repetibilidade e eficiência da configuração do ambiente.
+</p>
 
-Esse seção deve ser preenchida apenas se houver demanda do roteiro.
+<p align="justify">
+No lugar de ter que manualmente configurar um ambiente virtual, instalar as dependências necessárias (armazenadas em um requirements.txt) e pacotes como Python, pip e dependências do Django, o Ansible permite automatizar todo esse processo através de playbooks.
+</p>
 
-## <b>Discussões</b>
+<p align="justify">
+Além de automatizar todas as etapas da instalação e configuração, o Ansible segue instruções precisas que proporcionam um gerenciamento de múltiplos servidores ao mesmo tempo, que é útil para escalar a aplicação, e garantem um processo idêntico de configuração na necessidade de mais máquinas que cuidam da aplicação. 
+</p>
 
-Quais as dificuldades encontradas? O que foi mais fácil? O que foi mais difícil?
-
-## <b>Conclusão</b>
-
-O que foi possível concluir com a realização do roteiro?
+<p align="justify">
+A grande vantagem de utilizar esta ferramenta é, portanto, a sua capacidade de superar uma abordagem manual que é propensa a erros humanos, demorada e difícil de reproduzir no momento de expansão para outros servidores.
+</p>
