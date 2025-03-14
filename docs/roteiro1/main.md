@@ -497,16 +497,23 @@ Testes de hardware do server 5
 Comissioning do server 5
 ///
 
-### <b>Parte 3: Utilizando o Ansible - deploy automatizado de aplicação</b>
+### <b>Parte 3: Status dos servidores após a instalação manual do Django</b>
+
+Com as mudanças feitas na parte 2, ...
+
+### <b>Parte 4: Utilizando o Ansible - deploy automatizado de aplicação</b>
 
 <p align="justify">
 Vamos partir para uma abordagem diferente, mas primeiro vamos garantir algumas coisas:
 </p>
 
-<p align="justify">
-<b>1)</b> 
-</p>
+**Tarefa 4.1) De um print da tela do Dashboard do MAAS com as 3 Máquinas e seus respectivos IPs.**
 
+**Tarefa 4.2) De um print da aplicação Django, provando que você está conectado ao server2**
+
+**Tarefa 4.3) De um print da aplicação Django, provando que você está conectado ao server3**
+
+**Tarefa 4.4) Diferença entre instalar manualmente a aplicação Django e utilizando o Ansible**
 
 ## <b>Questionário, Projeto ou Plano</b>
 
