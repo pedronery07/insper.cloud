@@ -344,7 +344,7 @@ $ sudo ufw allow 5432/tcp
 $ sudo systemctl restart postgresql
 ```
 
-**1) Dentro do server1, status do banco de dados se mostra ativo.**
+**Tarefa 1.1) Dentro do server1, status do banco de dados se mostra ativo.**
 
 ```
 $ sudo systemctl status postgresql
@@ -355,7 +355,7 @@ $ sudo systemctl status postgresql
 Status do PostgreSQL vendo do server1
 ///
 
-**2) Inicia a sessão e utiliza do computador/serviço remotamente, através da porta 5240, na MAIN. Serviço acessível da MAIN.**
+**Tarefa 1.2) Inicia a sessão e utiliza do computador/serviço remotamente, através da porta 5240, na MAIN. Serviço acessível da MAIN.**
 
 ```
 $ telnet localhost 5240
@@ -366,7 +366,7 @@ $ telnet localhost 5240
 Conexão estabelecida entre a MAIN e o serviço remoto
 ///
 
-**3) Serviço acessível na própria máquina onde o postgresql foi instalado.**
+**Tarefa 1.3) Serviço acessível na própria máquina onde o postgresql foi instalado.**
 
 ```
 $ sudo su - postgres
@@ -377,7 +377,7 @@ $ sudo su - postgres
 PostgreSQL acessível de dentro do server em que está alocado
 ///
 
-**4) Acessando a configuração do postgresql, foi possível verificar a porta na sessão ‘CONNECTIONS AND AUTHENTICATION’**
+**Tarefa 1.4) Acessando a configuração do postgresql, foi possível verificar a porta na sessão ‘CONNECTIONS AND AUTHENTICATION’**
 
 ```
 Comando: $ nano /etc/postgresql/14/main/postgresql.conf
@@ -401,16 +401,101 @@ $ maas [login] machine deploy [system_id]            # Deploy da aplicação
 ```
 
 <p align="justify">
-Acessando o servidor via SSH, clonamos o repositório onde teremos a aplicação Django ($ git clone https://github.com/raulikeda/tasks.git). Entrando no diretório tasks, fazemos a instalação das dependências do repositório ($ ./install.sh). 
+Acessando o servidor via SSH, clonamos o repositório onde teremos a aplicação Django. Entrando no diretório tasks, fazemos a instalação das dependências do repositório. 
 </p>
 
-<p align="justify">
-Após um breve reboot da máquina, iremos acessar o arquivo ‘/etc/hosts’ para darmos permissão a nossa MAIN de utilizar a aplicação como administrador. Podemos verificar a conexão com a aplicação com o comando: $ wget http://[IP server_app]:8080/admin/.
-</p>
+``` bash
+$ git clone https://github.com/raulikeda/tasks.git
+
+$ ./install.sh # Instalação das dependências
+```
 
 <p align="justify">
-Agora, ao acessar o MaaS podemos criar um túnel do serviço do servidor da aplicação na porta 8080 para nosso localhost na porta 8001 usando a conexão SSH ($ ssh cloud@10.103.0.X -L 8001:[IP server_app]:8080), desde que a porta 8001 não esteja sendo utilizada. Podemos então acessar a página de administrador do Django acessando no navegador o link: http://localhost:8001/admin/.
+Após um breve reboot da máquina, iremos acessar o arquivo ‘/etc/hosts’ para darmos permissão a nossa MAIN de utilizar a aplicação como administrador. Podemos verificar a conexão com a aplicação com o comando:
 </p>
+
+``` bash
+$ wget http://[IP server_app]:8080/admin/ # Verificando conexão com a aplicação
+```
+
+<p align="justify">
+Agora, ao acessar o MaaS podemos criar um túnel do serviço do servidor da aplicação na porta 8080 para nosso localhost na porta 8001 usando a conexão SSH, desde que a porta 8001 não esteja sendo utilizada. Podemos então acessar a página de administrador do Django acessando no navegador o link: http://localhost:8001/admin/.
+</p>
+
+``` bash
+$ ssh cloud@10.103.0.X -L 8001:[IP server_app]:8080 # conectando via SSH
+```
+
+**Tarefa 2.1) Dashboard do MAAS com as máquinas.**
+
+![Dashboard máquinas](./img/dashboard_maquinas.png)
+/// caption
+Servidores na interface do MAAS
+///
+
+**Tarefa 2.2) Aba imagens, com as imagens sincronizadas**
+
+![Imagens sincronizadas](./img/imagens_sinc.png)
+/// caption
+Imagens sincronizadas na interface do MAAS
+///
+
+**Tarefa 2.3) Da Aba de cada maquina mostrando os testes de hardware e commissioning com Status "OK"**
+
+**Server 1:**
+
+![Server 1 - Testes](./img/testes_server1.png)
+/// caption
+Testes de hardware do server 1
+///
+![Server 1 - Comissioning](./img/comissioning_server1.png)
+/// caption
+Comissioning do server 1
+///
+
+**Server 2:**
+
+![Server 2 - Testes](./img/testes_server2.png)
+/// caption
+Testes de hardware do server 2
+///
+![Server 2 - Comissioning](./img/comissioning_server2.png)
+/// caption
+Comissioning do server 2
+///
+
+**Server 3:**
+
+![Server 3 - Testes](./img/testes_server3.png)
+/// caption
+Testes de hardware do server 3
+///
+![Server 3 - Comissioning](./img/comissioning_server3.png)
+/// caption
+Comissioning do server 3
+///
+
+**Server 4:**
+
+![Server 4 - Testes](./img/testes_server4.png)
+/// caption
+Testes de hardware do server 4
+///
+![Server 4 - Comissioning](./img/comissioning_server4.png)
+/// caption
+Comissioning do server 4
+///
+
+**Server 5:**
+
+![Server 5 - Testes](./img/testes_server5.png)
+/// caption
+Testes de hardware do server 5
+///
+![Server 5 - Comissioning](./img/comissioning_server5.png)
+/// caption
+Comissioning do server 5
+///
 
 ### <b>Parte 3: Utilizando o Ansible - deploy automatizado de aplicação</b>
 
