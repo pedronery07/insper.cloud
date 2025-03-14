@@ -312,11 +312,55 @@ $ ssh cloud@10.103.1.10
 
 # App
 
+Na parte da aplicação deste primeiro roteiro, foi realizado um deploy manual de uma aplicação simples em Django nos servidores.
 
+### Tarefa 1: Criação do banco de dados
 
-### Tarefa 1
+Acessando o terminal do server 1 via SSH, foi criado um usuário (senha: cloud) por meio dos comandos:
 
-### Tarefa 2
+``` bash
+$ sudo apt update
+
+$ sudo apt install postgresql postgresql-contrib -y
+
+$ sudo su - postgres
+
+$ createuser -s cloud -W
+```
+
+Em seguida, foi criado o banco de dados e exposto o serviço para acesso:
+
+``` bash
+$ createdb -O cloud tasks
+
+$ nano /etc/postgresql/14/main/postgresql.conf
+```
+
+Saindo do usuário postgres, liberou-se o firewall e o serviço foi reiniciado:
+
+``` bash
+$ sudo ufw allow 5432/tcp
+
+$ sudo systemctl restart postgresql
+```
+
+### Tarefa 2: Aplicação Django
+
+<p align="justify">
+Após requisitar acesso a uma máquina em nosso servidor ($ maas login [login] http://172.16.0.3:5240/MAAS/), e inserir o token da aba ‘API keys’ presente no Dashboard, solicitamos ao MaaS a alocação de uma máquina ($ maas [login] machines allocate name=[server_name]) e realizamos o deploy da nossa aplicação ($ maas [login] machine deploy [system_id]), sendo ‘system_id’ o id do server alocado, visível no link do Dashboard ao clicar na máquina desejada.
+</p>
+
+<p align="justify">
+Acessando o servidor via SSH, clonamos o repositório onde teremos a aplicação Django ($ git clone https://github.com/raulikeda/tasks.git). Entrando no diretório tasks, fazemos a instalação das dependências do repositório ($ ./install.sh). 
+</p>
+
+<p align="justify">
+Após um breve reboot da máquina, iremos acessar o arquivo ‘/etc/hosts’ para darmos permissão a nossa MAIN de utilizar a aplicação como administrador. Podemos verificar a conexão com a aplicação com o comando: $ wget http://[IP server_app]:8080/admin/.
+</p>
+
+<p align="justify">
+Agora, ao acessar o MaaS podemos criar um túnel do serviço do servidor da aplicação na porta 8080 para nosso localhost na porta 8001 usando a conexão SSH ($ ssh cloud@10.103.0.X -L 8001:[IP server_app]:8080), desde que a porta 8001 não esteja sendo utilizada. Podemos então acessar a página de administrador do Django acessando no navegador o link: http://localhost:8001/admin/.
+</p>
 
 Exemplo de diagrama
 
