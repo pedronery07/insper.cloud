@@ -1,4 +1,4 @@
-## Introdução e Objetivo
+## <b>Introdução e Objetivo</b>
 
 O roteiro 1 contempla a fundação de toda a infraestrutura da Cloud que foi montada a partir de um KIT que contava com os seguintes componentes:
 
@@ -29,7 +29,7 @@ Ao longo deste roteiro, passaremos pelos seguintes passos:
 Ao final deste roteiro, o objetivo principal é termos, portanto, uma Cloud com um primeiro gerenciador de deploy instalado. A partir disso, o cliente já será capaz de realizar requisições ao servidor se estiver conectado à rede Wi-Fi do Insper. 
 </p>
 
-## Montagem do Roteiro
+## <b>Montagem do Roteiro</b>
 
 <p align="justify">
 Todo roteiro apresenta uma primeira parte denonimnada <b>Infra</b> e uma segunda chamada de <b>App</b>.
@@ -37,9 +37,9 @@ Os pontos <b>tarefas</b> dentro de cada parte são os passos seguidos para a rea
 Este modelo de organização orientado por partes e tarefas será utilizado em <b>todos os roteiros</b>.
 </p>
 
-# Infra
+# <b>Infra</b>
 
-## Tarefa 0: Endereços MAC das NUCs e IP do roteador
+## <b>Parte 0: Endereços MAC das NUCs e IP do roteador</b>
 
 <p align="justify">
 Antes de iniciar qualquer instalação, foi essencial capturar <b>imagens de todos os endereços MAC dos servidores (1 a 5)</b>. 
@@ -58,7 +58,7 @@ Além disso, foi realizado um pré-roteiro relativo à montagem de um cabo de re
 Tela de configuração de IP do roteador e de máscara de subrede
 ///
 
-## Tarefa 1: Instalação do Ubuntu Server
+## <b>Parte 1: Instalação do Ubuntu Server</b>
 
 Para a realização desta primeira tarefa, foram seguidos os passos descritos a seguir para configurar a NUC main:
 
@@ -138,9 +138,9 @@ Após a conclusão de todos os passos da instalação, foi realizado um reboot d
 
 --- 
 
-## Tarefa 2: MAAS - acesso local
+## <b>Parte 2: MAAS - acesso local</b>
 
-### Instalação
+### <b>Instalação</b>
 
 <p align="justify">
 Para a instalação do MAAS na NUC main (que agora tem um sistema operacional), optou-se pela versão 3.5.3. No terminal do Ubuntu Server, foram utilizados os comandos a seguir:
@@ -167,7 +167,7 @@ Após o teste feito com sucesso, foi realizado um acesso da NUC main via SSH com
 $ ssh cloud@172.16.0.3
 ```
 
-### Configuração
+### <b>Configuração</b>
 
 <p align="justify">
 Dentro da rede local, o MAAS foi inicializado e criou-se o administrador cloud, que será necessário para poteriormente ser possível acessar o dashboard. Antes da inicialização foi necessário realizar um <b>reboot</b>.
@@ -212,7 +212,7 @@ Em seguida, foram importadas imagens do <b>Ubuntu 22.04 LTS</b> e <b>Ubuntu 20.0
 Por fim, foi passado o parâmetro kernel <b>net.ifnames=0</b> em Settings > Configuration > Kernel Parameters.
 </p>
 
-### Chaveando o DHCP
+### <b>Chaveando o DHCP</b>
 
 <p align="justify">
 O DHCP (Dynamic Host Configuration Protocol) é um protocolo de rede que permite a configuração automática de dispositivos em uma rede IP. Ele é principalmente responsável por atribuir dinamicamente endereços IP, eliminando a necessidade de configuração manual, mas também pode assumir funções como, por exemplo, definir a máscara de sub-rede e fornecer servidores DNS.
@@ -247,7 +247,7 @@ A saúde do sistema também foi verificada a partir da página de Controladores 
 Tela de verificação da saúde do sistema
 ///
 
-### Comissionando servidores
+### <b>Comissionando servidores</b>
 
 <p align="justify">
 Com o DHCP agora devidamente chaveado, os servers 1 a 5 foram cadastrados como machines no Dashboard do MAAS. 
@@ -274,7 +274,7 @@ Antes de possibilitar o acesso remoto ao KIT, um passo final foi criar, para cad
 Interface do Server 1 após a criação da ponte Open vSwitch (OVS)
 ///
 
-## Tarefa 3: MAAS - acesso remoto
+## <b>Parte 3: MAAS - acesso remoto</b>
 
 Para que seja possível acessar o KIT remotamente, e não mais através do cabo na rede local, é necessário realizar a criação de um gateway NAT. 
 
@@ -310,11 +310,11 @@ A partir deste momento, portanto, passou a ser possível conectar-se ao dashboar
 $ ssh cloud@10.103.1.10
 ```
 
-# App
+# <b>App</b>
 
 Na parte da aplicação deste primeiro roteiro, foi realizado um deploy manual de uma aplicação simples em Django nos servidores.
 
-### Tarefa 1: Criação do banco de dados
+### <b>Parte 1: Criação do banco de dados</b>
 
 Acessando o terminal do server 1 via SSH, foi criado um usuário (senha: cloud) por meio dos comandos:
 
@@ -347,32 +347,58 @@ $ sudo systemctl restart postgresql
 **1) Dentro do server1, status do banco de dados se mostra ativo.**
 
 ```
-Comando: $ sudo systemctl status postgresql .
+$ sudo systemctl status postgresql
 ```
+
+![PostgreSQL Status - EXTERNO](./img/tarefa1_1.png)
+/// caption
+Status do PostgreSQL vendo do server1
+///
 
 **2) Inicia a sessão e utiliza do computador/serviço remotamente, através da porta 5240, na MAIN. Serviço acessível da MAIN.**
 
 ```
-Comando: $ telnet localhost 5240
+$ telnet localhost 5240
 ```
+
+![Conexao MAIN -> Serviço](./img/tarefa1_2.png)
+/// caption
+Conexão estabelecida entre a MAIN e o serviço remoto
+///
 
 **3) Serviço acessível na própria máquina onde o postgresql foi instalado.**
 
 ```
-Comando: $ sudo su - postgres
+$ sudo su - postgres
 ```
 
-**4) Acessando a configuração do postgresql, usando o comando                                    $ nano /etc/postgresql/14/main/postgresql.conf  , foi possível verificar a porta na sessão ‘CONNECTIONS AND AUTHENTICATION’**
+![PostgreSQL Status - LOCAL](./img/tarefa1_3.png)
+/// caption
+PostgreSQL acessível de dentro do server em que está alocado
+///
+
+**4) Acessando a configuração do postgresql, foi possível verificar a porta na sessão ‘CONNECTIONS AND AUTHENTICATION’**
 
 ```
 Comando: $ nano /etc/postgresql/14/main/postgresql.conf
 ```
 
-### Tarefa 2: Aplicação Django
+![Porta PostgreSQL](./img/tarefa1_4.png)
+/// caption
+Configurações do PostgreSQL (default)
+///
+
+### <b>Parte 2: Aplicação Django</b>
 
 <p align="justify">
-Após requisitar acesso a uma máquina em nosso servidor ($ maas login [login] http://172.16.0.3:5240/MAAS/), e inserir o token da aba ‘API keys’ presente no Dashboard, solicitamos ao MaaS a alocação de uma máquina ($ maas [login] machines allocate name=[server_name]) e realizamos o deploy da nossa aplicação ($ maas [login] machine deploy [system_id]), sendo ‘system_id’ o id do server alocado, visível no link do Dashboard ao clicar na máquina desejada.
+Após requisitar acesso a uma máquina em nosso servidor (<b><i>Comando 1</i></b>), e inserir o token da aba ‘API keys’ presente no Dashboard, solicitamos ao MaaS a alocação de uma máquina (<b><i>Comando 2</i></b>) e realizamos o deploy da nossa aplicação (<b><i>Comando 3</i></b>), sendo ‘system_id’ o id do server alocado, visível no link do Dashboard ao clicar na máquina desejada.
 </p>
+
+```
+$ maas login [login] http://172.16.0.3:5240/MAAS/    # Requisição de máquina
+$ maas [login] machines allocate name=[server_name]  # Solicita alocação a MAIN
+$ maas [login] machine deploy [system_id]            # Deploy da aplicação
+```
 
 <p align="justify">
 Acessando o servidor via SSH, clonamos o repositório onde teremos a aplicação Django ($ git clone https://github.com/raulikeda/tasks.git). Entrando no diretório tasks, fazemos a instalação das dependências do repositório ($ ./install.sh). 
@@ -386,32 +412,25 @@ Após um breve reboot da máquina, iremos acessar o arquivo ‘/etc/hosts’ par
 Agora, ao acessar o MaaS podemos criar um túnel do serviço do servidor da aplicação na porta 8080 para nosso localhost na porta 8001 usando a conexão SSH ($ ssh cloud@10.103.0.X -L 8001:[IP server_app]:8080), desde que a porta 8001 não esteja sendo utilizada. Podemos então acessar a página de administrador do Django acessando no navegador o link: http://localhost:8001/admin/.
 </p>
 
-Exemplo de diagrama
+### <b>Parte 3: Utilizando o Ansible - deploy automatizado de aplicação</b>
 
-```mermaid
-architecture-beta
-    group api(cloud)[API]
+<p align="justify">
+Vamos partir para uma abordagem diferente, mas primeiro vamos garantir algumas coisas:
+</p>
 
-    service db(database)[Database] in api
-    service disk1(disk)[Storage] in api
-    service disk2(disk)[Storage] in api
-    service server(server)[Server] in api
+<p align="justify">
+<b>1)</b> 
+</p>
 
-    db:L -- R:server
-    disk1:T -- B:server
-    disk2:T -- B:db
-```
 
-[Mermaid](https://mermaid.js.org/syntax/architecture.html){:target="_blank"}
-
-## Questionário, Projeto ou Plano
+## <b>Questionário, Projeto ou Plano</b>
 
 Esse seção deve ser preenchida apenas se houver demanda do roteiro.
 
-## Discussões
+## <b>Discussões</b>
 
 Quais as dificuldades encontradas? O que foi mais fácil? O que foi mais difícil?
 
-## Conclusão
+## <b>Conclusão</b>
 
 O que foi possível concluir com a realização do roteiro?
