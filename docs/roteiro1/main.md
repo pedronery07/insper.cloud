@@ -344,6 +344,30 @@ $ sudo ufw allow 5432/tcp
 $ sudo systemctl restart postgresql
 ```
 
+**1) Dentro do server1, status do banco de dados se mostra ativo.**
+
+```
+Comando: $ sudo systemctl status postgresql .
+```
+
+**2) Inicia a sessão e utiliza do computador/serviço remotamente, através da porta 5240, na MAIN. Serviço acessível da MAIN.**
+
+```
+Comando: $ telnet localhost 5240
+```
+
+**3) Serviço acessível na própria máquina onde o postgresql foi instalado.**
+
+```
+Comando: $ sudo su - postgres
+```
+
+**4) Acessando a configuração do postgresql, usando o comando                                    $ nano /etc/postgresql/14/main/postgresql.conf  , foi possível verificar a porta na sessão ‘CONNECTIONS AND AUTHENTICATION’**
+
+```
+Comando: $ nano /etc/postgresql/14/main/postgresql.conf
+```
+
 ### Tarefa 2: Aplicação Django
 
 <p align="justify">
