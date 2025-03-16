@@ -497,9 +497,25 @@ Testes de hardware do server 5
 Comissioning do server 5
 ///
 
-### <b>Parte 3: Status dos servidores após a instalação manual do Django</b>
+### <b>Parte 3: CHECKPOINT - Status dos servidores após a instalação manual do Django</b>
 
-Com as mudanças feitas na parte 2, ...
+<p align="justify">
+Com as mudanças feitas na parte 2, antes de continuarmos precisamos garantir algumas coisas:
+</p>
+
+**Tarefa 3.1) As 2 Máquinas se mostram ativas e com seus IPs definidos no Dashboard do MaaS**
+
+![Dashboard máquinas](./img/dashboard_maquinas.png)
+/// caption
+Servidores na interface do MAAS
+///
+
+**Tarefa 3.2) A aplicação Django se encontra no ar, está conectada ao server e acessível a partir do túnel**
+
+![Aplicação ativa e acessível](./img/tarefa3_2.png)
+/// caption
+Aplicação Django conectada ao server e acessível através do tunel
+///
 
 ### <b>Parte 4: Ansible - deploy automatizado de aplicação</b>
 
@@ -561,3 +577,164 @@ Além de automatizar todas as etapas da instalação e configuração, o Ansible
 <p align="justify">
 A grande vantagem de utilizar esta ferramenta é, portanto, a sua capacidade de superar uma abordagem manual que é propensa a erros humanos, demorada e difícil de reproduzir no momento de expansão para outros servidores.
 </p>
+
+### <b>Parte 5: Balancamento de carga usando Proxy Reverso</b>
+
+<p align="justify">
+Agora que fizemos a instalação do Django, tanto manualmente como utilizando o Ansible, podemos criar um servidor para agir como um ponto único de entrada, verificando a disponibilidade de cada server e garantindo uma melhor experiência de uso para o usuário. O nome deste mecanismo é <b>Loadbalancing</b> e ele é especialmente útil para realizar esta distribuição de tráfego de entrada por vários servidores privados, garantindo tolerância a falhas e maior estabilidade.
+</p>
+
+<p align="justify">
+Para isso, vamos utilizar o <b>NGINX</b>, que usa o algortimo Round Robin para balanceamento de carga para um conjunto IPs disponíveis cadastrados. Ele é relativamente simples de implementar e não considera fatores como tempo de resposta do servidor e a região geográfica de acesso, mas será suficiente para nossa aplicação.
+</p>
+
+<p align="justify">
+Iniciando, vamos iniciar fazendo deploy de um novo servidor (server4), que irá realizar fazer este trabalho de Loadbalancing para os servidores em que instalamos nossas aplicações Django, em nosso Dashboard do MaaS.
+</p>
+
+**Tarefa 5.1) Print da tela do Dashboard do MAAS com as 4 Máquinas e seus respectivos IPs.**
+
+![Dashboard: 4 Máquinas e IPs](./img/tarefa5_1.png)
+/// caption
+Dashboard do MaaS com os quatro servidores com deploy feito e seus respectivos IPs
+///
+
+<p align="justify">
+Após terminar o deploy, vamos acessar o servidor 4 via SSH e, em seu terminal, vamos realizar a instalação do nginx.
+</p>
+
+```
+$ ssh ubuntu@{IP Server4}
+$ sudo apt-get install nginx
+```
+
+<p align="justify">
+Para definir quais servidores o Loadbalancer Round Robin utilizará para o balanceamento de cargas, precisamos editar o arquivo de configuração de sites disponíveis do Nginx:
+</p>
+
+```
+$ sudo nano /etc/nginx/sites-available/default
+```
+
+<p align="justify">
+Primeiro, vamos adicionar, <b>antes do bloco server</b>, um bloco upstream para que o nginx saiba quais servidores serão aqueles que iremos utilizar como backend para tratar as requisições recebidas. No nosso caso, deixaremos assim:
+</p>
+
+```
+upstream backend {
+    server2 {IP server2}:8080;
+    server3 {IP server3}:8080;
+}
+```
+
+<p align="justify">
+Depois, vamos substituir o bloco server presente no arquivo por padrão e vamos configura-lo para ficar escutando a porta 80 e para utilizar um <i>proxy_pass</i> para direcionar as requisições aos server backend.
+</p>
+
+```
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://backend;
+    }
+}
+```
+
+<p align="justify">
+Para registrar as alterações, precisamos dar um restart no nginx com o seguinte comando:
+</p>
+
+```
+$ sudo service nginx restart
+```
+
+<p align="justify">
+Pronto! O nginx já está configurado e pronto uso.
+</p>
+
+<p align="justify"> 
+Agora, só nos falta verificar a conexão com os servidores 2 e 3 a partir do servidor 4. Para isso vamos iniciar modificando o <i>views.py</i> de cada servidor onde instalamos o Django. Vamos trocar o print presente, para podermos identificar se estamos conectados no servidor 2 ou no servidor 3. Veja um exemplo para o servidor 2:
+</p>
+
+```
+$ sudo nano tasks/tasks/views.py
+```
+
+``` py
+# Exemplo de resolução
+from django.shortcuts import render
+
+from django.http import HttpResponse
+
+def index(request):
+
+  return HttpResponse("Hello from server 2!")
+```
+
+**Tarefa 5.2) Conteúdo da mensagem contida na função `index` do arquivo `tasks/views.py` de cada server para distinguir ambos os servers.**
+
+![Conexão Proxy Rev. Server2](./img/tarefa5_2_1.png)
+/// caption
+Conexão com o server2 a partir do túnel
+///
+
+![Conexão Proxy Rev. Server3](./img/tarefa5_2_2.png)
+/// caption
+Conexão com o server3 a partir do túnel
+///
+
+<p align="justify"> 
+Após fazer a mesma coisa para o servidor 3, vamos sair dos servidores, incluindo a main, usando o comando:
+</p>
+
+```
+$ exit
+```
+
+<p align="justify"> 
+Vamos acessar novamente a main, porém utilizando uma pipeline para o server4:
+</p>
+
+```
+$ ssh cloud@{IP server1} -L 8081:{IP server4}:80
+```
+
+<p align="justify"> 
+Este comando, basicamente, cria uma conexão SSH com redirecionamento de porta, se conectando com o server1 (<b>ssh cloud@{IP server1}</b>), com redirecionamento de porta local (<b>-L</b>) e fazendo um túnel que:
+</p>
+
+<li align="justify"> 
+Toda conexão feita na porta <b>8081</b> da máquina local é encaminhada para o <b>server1</b>.
+</li>
+<li align="justify"> 
+A partir de <b>server1</b>, o tráfego é redirecionado para o <b>server4</b> na porta <b>80</b>.
+</li>
+
+<p align="justify"> 
+<b>OBS:</b> Todas as portas mencionadas aqui, foram setadas e configuradas previamente no roteiro.
+</p>
+
+<p align="justify"> 
+Com a nginx configurado e o túnel criado, podemos acessar ambos os servidores em nosso navegador com o link:
+</p>
+
+<li align="justify"> 
+<a href='localhost:8081/tasks/'>localhost:8081/tasks/</a>
+</li>
+
+<p align="justify"> 
+Pronto! Agora podemos verificar que ao acessar este link, uma hora somos recebidos com a mensagem do server 2, outra hora com a mensagem do server 3.
+</p>
+
+**Tarefa 5.3) Prints das respostas de cada request, provando que voce está conectado ao server 4, que é o Proxy Reverso e que ele bate cada vez em um server diferente server2 e server3.**
+
+![Conexão Proxy Rev. Server2](./img/tarefa5_3_1.png)
+/// caption
+Conexão com o server2 a partir do túnel
+///
+
+![Conexão Proxy Rev. Server3](./img/tarefa5_3_2.png)
+/// caption
+Conexão com o server3 a partir do túnel
+///
