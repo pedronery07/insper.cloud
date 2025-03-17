@@ -589,7 +589,7 @@ Para isso, vamos utilizar o <b>NGINX</b>, que usa o algortimo Round Robin para b
 </p>
 
 <p align="justify">
-Iniciando, vamos iniciar fazendo deploy de um novo servidor (server4), que irá realizar fazer este trabalho de Loadbalancing para os servidores em que instalamos nossas aplicações Django, em nosso Dashboard do MaaS.
+Iniciando, vamos fazer o deploy de um novo servidor (server4), que irá realizar fazer este trabalho de Loadbalancing para os servidores em que instalamos nossas aplicações Django, em nosso Dashboard do MaaS.
 </p>
 
 **Tarefa 5.1) Print da tela do Dashboard do MAAS com as 4 Máquinas e seus respectivos IPs.**
