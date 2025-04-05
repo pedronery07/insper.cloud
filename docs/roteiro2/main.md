@@ -88,6 +88,85 @@ Esse comando utiliza a série <b>jammy</b> e define o nome do controlador como <
 
 # <b>App</b>
 
-## <b>Conclusão</b>
+## <b>Parte 1: Instalação do Juju dashboard para o controller</b>
 
-O que foi possível concluir com a realização do roteiro?
+<p align="justify">
+Para a instalação do juju dashboard, deve-se, primeiro, ter certeza de que estamos no controlador e, sem seguida, executar o comando necessário:
+</p>
+
+``` bash 
+$ juju switch maas-controller:admin/maas
+
+$ juju deploy juju-dashboard dashboard
+```
+
+## <b>Parte 2: Deploy da aplicação Grafana e Prometheus</b>
+
+Com o Juju dashboard instalado, prosseguimos para a aplicação e a configuração do banco de dados.
+
+<p align="justify">
+Neste contexto, será utilizado o Prometheus como banco de dados e o Grafana como plataforma de apresentação visual dos números (tipicamente gráficos e painéis).
+</p>
+
+<p align="justify">
+O primeiro passo tomado foi a criação de uma pasta chamada charms para baixar o charm do Grafana e do Prometheus do repositório charm-hub:
+</p>
+
+``` bash 
+$ mkdir -p /home/cloud/charms
+
+$ cd /home/cloud/charms
+```
+
+Em seguida, foi realizado o download das duas ferramentas:
+
+``` bash 
+$ juju download grafana
+
+$ juju download prometheus2
+```
+
+E, por fim, o deploy do charm prometheus:
+
+``` bash 
+$ juju deploy ./prometheus2_XXX.charm
+```
+
+Além disso, foi utilizado o comando *watch -n 1 juju status* para acompanhar a evolução do processo.
+
+## <b>Parte 3: Integração do Grafana com o Prometheus</b>
+
+Para que o Grafana mostre os dados contidos no Prometheus, foi utilizado o seguinte comando de integração:
+
+``` bash 
+$ COMANDO AQUI
+```
+
+![Tarefa 1.1](./img/tarefa1_1.jpg)
+/// caption
+Dashboard do MAAS com as máquinas e seus respectivos IPs
+///
+
+![Tarefa 1.2](./img/tarefa1_2.jpg)
+/// caption
+Tela do comando "juju status" com o Grafana ativo
+///
+
+![Tarefa 1.3](./img/tarefa1_3.jpg)
+/// caption
+Tela do Dashboard do Grafana com o Prometheus aparecendo como source
+///
+
+![Tarefa 1.4](./img/tarefa1_4.jpg)
+/// caption
+Acesso ao Dashboard do Grafana a partir da rede do Insper
+///
+
+![Tarefa 1.5](./img/tarefa1_5.jpg)
+/// caption
+Aplicações sendo gerenciadas pelo Juju 
+///
+
+<p align="justify">
+Para seguir adiante para o próximo roteiro, o controlador foi deletado usando o comando <i>juju destroy-controller main</i> e o ambiente foi, novamente, reconfigurado para a estaca zero.
+</p>
