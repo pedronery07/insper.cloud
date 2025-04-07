@@ -88,6 +88,14 @@ Esse comando utiliza a série <b>jammy</b> e define o nome do controlador como <
 
 # <b>App</b>
 
+Para uma melhor visualização do passo a passo feito a seguir, recomendamos manter um terminal aberto ao lado rodando o seguinte comando:
+
+``` bash
+$ watch -n 1 -c juju status --color
+```
+
+Nele, será possível visualizar cada mudança feita na infraestrutura em tempo real.
+
 ## <b>Parte 1: Instalação do Juju dashboard para o controller</b>
 
 <p align="justify">
@@ -126,20 +134,22 @@ $ juju download grafana
 $ juju download prometheus2
 ```
 
-E, por fim, o deploy do charm prometheus:
+E, por fim, o deploy dos charms de cada uma:
 
 ``` bash 
+$ juju deploy ./grafana_r69.charm --base=ubuntu@20.04
+
 $ juju deploy ./prometheus2_XXX.charm
 ```
 
-Além disso, foi utilizado o comando *watch -n 1 juju status* para acompanhar a evolução do processo.
+<b>Nota: </b> Nos últimos comandos, utilizamos o deploy do grafana em uma versão específica, para `ubuntu@20.04`, por conta de problemas de compatibilidade com versões mais novas.
 
 ## <b>Parte 3: Integração do Grafana com o Prometheus</b>
 
 Para que o Grafana mostre os dados contidos no Prometheus, foi utilizado o seguinte comando de integração:
 
 ``` bash 
-$ COMANDO AQUI
+$ juju integrate grafana:grafana-source prometheus2:grafana-source
 ```
 
 ![Tarefa 1.1](./img/tarefa1_1.jpg)
