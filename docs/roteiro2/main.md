@@ -117,7 +117,17 @@ Neste contexto, será utilizado o Prometheus como banco de dados e o Grafana com
 </p>
 
 <p align="justify">
-O primeiro passo tomado foi a criação de uma pasta chamada charms para baixar o charm do Grafana e do Prometheus do repositório charm-hub:
+O primeiro passo tomado foi a criação um novo modelo, que chamaremos de <code>openstack</code>, onde iremos baixar e realizar as configurações das aplicações.
+</p>
+
+``` bash 
+$ juju add-model --config default-series=jammy openstack
+
+$ juju switch openstack 
+```
+
+<p align="justify">
+Após isso, foi criado uma pasta chamada charms para baixar o charm do Grafana e do Prometheus do repositório charm-hub:
 </p>
 
 ``` bash 
@@ -161,6 +171,38 @@ Dashboard do MAAS com as máquinas e seus respectivos IPs
 /// caption
 Tela do comando "juju status" com o Grafana ativo
 ///
+
+Se desconectando da máquina MAIN, demos um `ssh` para entrar na MAIN novamente, porém fazendo um túnel da porta do Grafana (`3000` por padrão) para uma porta da nossa localhost (`8001`):
+
+``` bash
+$ ssh cloud@10.103.1.X -L 8001:{IP Server Grafana}:3000
+```
+
+Acessando o Dashboard em nosso navegador (<a href="localhost:8001/login">localhost:8001/login</a>), foi utilizado o seguinte procedimento para fazer o login:
+
+<ul>
+  <li><b>Login</b>: 
+      <ul>
+          <li>
+            Por padrão: <code>admin</code>
+          </li>
+      </ul>
+  </li>
+
+  <li><b>Senha</b>: 
+      <ul>
+          <li>
+            Para obter a senha do Grafana, temos que pedir ao juju para rodar o comando <code>get-admin-password</code> na unidade onde está o serviço:
+          </li>
+      </ul>
+  </li>
+</ul>
+
+``` bash
+$ juju run grafana/1 get-admin-password
+```
+
+Agora, dentro do Dashboard do `Grafana`, o último passo foi conferir se a integração foi feita corretamente. Para isso, foi criado um dashboard dentro do Grafana e foi selecionado o `Prometheus` como source.
 
 ![Tarefa 1.3](./img/tarefa1_3.jpg)
 /// caption
