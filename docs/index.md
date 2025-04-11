@@ -16,7 +16,7 @@ Pedro Nery Affonso dos Santos
 ## Entregas
 
 - [X] Roteiro 1 
-- [ ] Roteiro 2
+- [X] Roteiro 2
 - [ ] Roteiro 3
 - [ ] Roteiro 4
 - [ ] Projeto

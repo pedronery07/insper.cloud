@@ -149,7 +149,7 @@ E, por fim, o deploy dos charms de cada uma:
 ``` bash 
 $ juju deploy ./grafana_r69.charm --base=ubuntu@20.04
 
-$ juju deploy ./prometheus2_XXX.charm
+$ juju deploy ./prometheus2_r60.charm
 ```
 
 <b>Nota: </b> Nos últimos comandos, utilizamos o deploy do grafana em uma versão específica, para `ubuntu@20.04`, por conta de problemas de compatibilidade com versões mais novas.
