@@ -157,7 +157,7 @@ A organização do diretório ao final do projeto:
 ```
 
 <p align="justify">
-Para subir o container no Docker Hub, foi utilizado os seguintes comandos:
+Para subir o container no Docker Hub, foram utilizados os seguintes comandos:
 </p>
 
 <ol>
@@ -190,10 +190,10 @@ docker compose up
 Caso tenha curiosidade, é possível encontrar o projeto nos links:
 <ul>
     <li>
-        <a href="https://github.com/antoniolma/insper.cloud-projeto.git">Link projeto Github</a>
+        <a href="https://github.com/antoniolma/insper.cloud-projeto.git" target="_blank">Link projeto Github</a>
     </li>
     <li>
-        <a href="https://hub.docker.com/repository/docker/antoniolma/app/general">Link projeto DockerHub</a>
+        <a href="https://hub.docker.com/repository/docker/antoniolma/app/" target="_blank">Link projeto DockerHub</a>
     </li>
 </ul>
 </p>
