@@ -51,7 +51,10 @@ Este projeto consiste em desenvolver uma <b>API RESTful</b> em <b>FastAPI</b>, c
     </li>   
     <li>
         <b>GET /consultar</b>: 
-        <p>AAAAAAAAAAAAaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAaaaaaaaAAAAAaaaaaAAAaaaaAAAAaaaAAAAaaAAAAAAAAAAAAAAAAAA</p>
+        <ul>
+            <li><b>Código 200</b>: (Sucesso) Verificação bem sucedida do <b>JWT Token</b> e requisição feita com sucesso à Awesome API, cuja resposta é devolvida ao cliente: <b>a cotação atual do Euro e do Dolár em relação ao Real</b></li>
+            <li><b>Código 403</b>: (Error) <b>JWT Token</b> inválido ou ausente no header.</li>
+        </ul>
     </li>
 </ul>
 
@@ -143,14 +146,14 @@ A organização do diretório ao final do projeto:
 </p>
 
 ``` bash 
-├── api/                    # contexto de build da sua aplicação
+├── api/
 │   ├── Dockerfile          # Dockerfile que instala dependências e copia api/app/
-│   ├── requirements.txt    # lista de pacotes Python
-│   └── app/                # código-fonte FastAPI
+│   ├── requirements.txt    # dependências para o python
+│   └── app/                # código com FastAPI
 │       ├── app.py
 │       └── models.py
 ├── .env                    # variáveis de ambiente (POSTGRES_*, DATABASE_URL, SECRET_KEY…)
-└── docker-compose.yml      # orquestração dos serviços db + app
+└── docker-compose.yaml     # orquestração dos serviços db + app
 ```
 
 <p align="justify">
@@ -163,9 +166,34 @@ Para subir o container no Docker Hub, foi utilizado os seguintes comandos:
     docker login
     ```
     </li>
-    <li> Login no Docker Hub:
+    <li> Build da imagem e inicialização dos containers:
     ```bash
-    docker login
+    docker compose up --build
+    ```
+    </li>
+    <li> Push da versão atual para o Docker Hub:
+    ```bash
+    docker push antoniolma/app  
     ```
     </li>
 </ol>
+
+<p align="justify">
+Porém, para apenas utilizar a aplicação, ao baixar o projeto no repositório do Github, basta utilizar o comando:
+</p>
+
+```bash
+docker compose up
+```
+
+<p align="justify">
+Caso tenha curiosidade, é possível encontrar o projeto nos links:
+<ul>
+    <li>
+        <a href="https://github.com/antoniolma/insper.cloud-projeto.git">Link projeto Github</a>
+    </li>
+    <li>
+        <a href="https://hub.docker.com/repository/docker/antoniolma/app/general">Link projeto DockerHub</a>
+    </li>
+</ul>
+</p>
