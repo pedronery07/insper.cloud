@@ -17,8 +17,8 @@ Pedro Nery Affonso dos Santos
 
 - [X] Roteiro 1 
 - [X] Roteiro 2
-- [ ] Roteiro 3
-- [ ] Roteiro 4
+- [X] Roteiro 3
+- [X] Roteiro 4
 - [ ] Projeto
 
 
