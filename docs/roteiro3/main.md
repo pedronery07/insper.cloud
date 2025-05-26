@@ -150,27 +150,130 @@ Contudo, para aplicações com maior demanda e um volume de dados maior para arm
 
 ## <b>Configuração da instância LoadBalancer</b>
 
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+<p align="justify">
+Primeiramente, foi instalado o Nginx por meio do seguinte comandos:
+</p>
+
+``` bash
+sudo apt-get install nginx
+```
 
 <p align="justify">
-instalação do nginx -> configuração do arquivo com upstream apontando para as APIs e proxy
+Em seguida, foi necessário editar o arquivo que permitiria o nginx a enxergar as duas instâncias para as quais o Load Balancer apontaria, conforme o diagrama ilustrado no início do relatório:
 </p>
+
+``` bash
+# Acessando arquivo de configuração do nginx
+sudo nano /etc/nginx/sites-available/default
+```
+
+<p align="justify">
+Dentro do arquivo, as alterações feitas foram as seguintes:
+</p>
+
+``` bash
+upstream backend {
+        server [IP de subrede da instância da API 1]:8080;
+        server [IP de subrede da instância da API 2]:8080;
+}
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+
+        location / { proxy_pass http://backend; 
+}
+```
+
+<p align="justify">
+Por fim, o serviço do nginx foi devidamente reinicializado para salvar as alterações feitas no arquivo:
+</p>
+
+``` bash
+sudo service nginx restart
+```
+
+## <b>Instalação do Docker</b>
+
+<p align="justify">
+Tanto para as instâncias de API quanto para o banco de dados, foi necessário realizar a instalação do docker. Afinal, puxaremos a mesma imagem para as duas instâncias de API do projeto pelo docker hub. Para isso, foi seguido o tutorial oficial no <a href="https://docs.docker.com/engine/install/ubuntu/" target="_blank">site do docker</a>. Os comandos executados, portanto, foram:
+</p>
+
+``` bash
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin 
+```
 
 ## <b>Configuração das instâncias de API</b>
 
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
 <p align="justify">
-instalação docker -> .env -> docker pull -> docker run
+Primeiramente, foram configuradas as variáveis de ambiente necessárias no arquivo .env. Aqui, além da URL para a interação com o banco de dados, também foram informadas as chaves necessárias para fazer as requisições para a API de cotação do dólar e do euro (um dos endpoints da aplicação):
 </p>
 
-## <b>Configuração da instância de Banco de Dados</b>
+``` bash
+AWESOME_API_KEY="API_KEY_AQUI"
+SECRET_KEY="SECRET_KEY_AQUI"
+ALGORITHM=HS256
 
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+POSTGRES_USER=cloud
+POSTGRES_PASSWORD=senha
+POSTGRES_DB=cloud
+DATABASE_URL=postgresql://cloud:senha@[IP de subrede do Banco de Dados]:5432/cloud
+```
 
 <p align="justify">
-instalação postgres -> instalação docker -> .env -> docker run
+Em seguida, a imagem do projeto publicada no docker hub foi puxada e o container foi executada nas duas instâncias.
 </p>
+
+``` bash
+sudo docker pull antoniolma/app
+sudo docker run -p 8080:80 --env-file .env -d antoniolma/app
+
+# Verificando se o container está sendo executado na máquina
+sudo docker ps -a
+```
+
+## <b>Configuração da instância do Banco de Dados</b>
+
+<p align="justify">
+Primeiramente, foi instalado o PostgreSQL por meio dos seguintes comandos:
+</p>
+
+``` bash
+sudo apt update
+sudo apt install postgresql postgresql-contrib -y
+```
+
+<p align="justify">
+Em seguida, assim como feito nas APIs, foram configuradas as variáveis de ambiente necessárias no arquivo .env:
+</p>
+
+``` bash
+POSTGRES_USER=cloud
+POSTGRES_PASSWORD=senha
+POSTGRES_DB=cloud
+```
+
+<p align="justify">
+Por fim, foi executado o docker na porta padrão do postgres para que as instâncias de API possam enxergar o banco de dados:
+</p>
+
+``` bash
+sudo docker run -p 5432:5432 --env-file .env -d postgres
+```
 
 ## <b>Verificação final</b>
 
@@ -207,17 +310,17 @@ Dashboard do FastAPI acessado após a aplicação do túnel SSH via máquina Ngi
 
 ![Alocação física do Load Balancer](./img/tarefa4_5_load-balancer.jpg)
 /// caption
-Máquina física alocada para o Load Balancer pelo OpenStack
+Máquina física alocada para o Load Balancer pelo OpenStack: Server 5
 ///
 ![Alocação física da API 1](./img/tarefa4_5_api-1.jpg)
 /// caption
-Máquina física alocada para a API 1 pelo OpenStack
+Máquina física alocada para a API 1 pelo OpenStack: Server 4
 ///
 ![Alocação física da API 2](./img/tarefa4_5_api-2.jpg)
 /// caption
-Máquina física alocada para a API 2 pelo OpenStack
+Máquina física alocada para a API 2 pelo OpenStack: Server 2
 ///
 ![Alocação física do Banco de Dados](./img/tarefa4_5_database.jpg)
 /// caption
-Máquina física alocada para o Banco de dados Postgres pelo OpenStack
+Máquina física alocada para o Banco de dados Postgres pelo OpenStack: Server 3
 ///
