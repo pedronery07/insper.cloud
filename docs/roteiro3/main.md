@@ -74,9 +74,10 @@ juju config ceph-osd osd-devices='/dev/sdb'
 # <b>Setup</b>
 
 No setup, foi feita a configuração dos serviços que controlam:
-    - as VMs (Nova);
-    - os volumes de disco (Cinder), e;
-    - a estrutura de rede virtual (Neutron).
+
+- as VMs (Nova);
+- os volumes de disco (Cinder);
+- a estrutura de rede virtual (Neutron).
 
 ## <b>Parte 1: Autenticação</b>
 
