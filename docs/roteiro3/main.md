@@ -16,6 +16,7 @@ O roteiro é dividido em três etapas: criação da infraestrutura (deploy do Op
 
 <p align="justify">
 Todo roteiro apresenta uma primeira parte denonimnada <b>Infra</b> e uma segunda chamada de <b>App</b>.
+No caso deste roteiro especificamente, também há uma seção intermediária de configuração prévia para o App, denominada de <b>Setup</b>.
 Os pontos <b>tarefas</b> dentro de cada parte são os passos seguidos para a realização do roteiro. 
 Este modelo de organização orientado por partes e tarefas será utilizado em <b>todos os roteiros</b>.
 </p>
@@ -92,6 +93,13 @@ No setup, foi feita a configuração dos serviços que controlam:
 ## <b>Parte 6: Conexão</b>
 
 ## <b>Parte 7: Instância</b>
+
+**Tarefa 3) Desenho da arquitetura de rede, desde a sua conexão com o Insper até a instância alocada.**
+
+![Arquitetura da rede](./img/desenho_rede_tarefa3.png)
+/// caption
+Arquitetura de rede
+///
 
 # <b>App</b>
 
