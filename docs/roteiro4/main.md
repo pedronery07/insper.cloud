@@ -179,7 +179,7 @@ Além da criação desses arquivos, cada aluno precisou criar um par de chaves p
 ## <b>Parte 2: Credenciais dos respectivos usuários</b>
 
 <p align="justify"> 
-Antes de aplicar as mudanças definidas nos arquivos Terraform, era necessário realizar um último passo: adicionar o arquivo de credenciais de cada usuário. Para isso, foi feito o download do arquivo OpenStack RC diretamente pelo Dashboard, no caminho <strong>Project → API Access</strong>, selecionando a opção <strong>"Download OpenStack RC File"</strong> para cada usuário (aluno1 e aluno2). 
+Antes de aplicar as mudanças definidas nos arquivos Terraform, era necessário realizar um último passo: adicionar o arquivo de credenciais de cada usuário. Para isso, foi feito o download do arquivo OpenStack RC diretamente pelo Dashboard, no caminho <b>Project → API Access</b>, selecionando a opção <b>"Download OpenStack RC File"</b> para cada usuário (aluno1 e aluno2). 
 </p>
 
 <p align="justify"> 
@@ -269,19 +269,164 @@ Aba de Topologia de Rede (Network Topology) do Dashboard do OpenStack para o alu
 
 ## <b>Parte 5: Criando um plano de Disaster Recovery e SLA (QUESTÕES)</b>
 
+!!! note "Exercise"
+    <p align="jusitfy">
+    Você é o CTO (Chief Technology Officer) de uma grande empresa com sede em várias capitais no Brasil e precisa implantar um sistema crítico, de baixo custo e com dados sigilosos para a área operacional.
+    </p>
+
+    a) Você escolheria Public Cloud ou Private Cloud?
+
+    b) Agora explique para ao RH por que você precisa de um time de DevOps.
+
+    <p align="jusitfy"> 
+    c) Considerando o mesmo sistema crítico, agora sua equipe deverá planejar e implementar um ambiente resiliente e capaz de mitigar possíveis interrupções/indisponibilidades. Para isso, identifiquem quais são as principais ameaças que podem colocar sua infraestrutura em risco, e descreva as principais ações que possibilitem o restabelecimento de todas as aplicações de forma rápida e organizada caso algum evento cause uma interrupção ou incidente de segurança. Para isso monte um plano de DR e HA que considere entre as ações:
+    </p>
+
+    - Mapeamento das principais ameaças que podem colocar em riscos o seu ambiente.
+    - Elenque e priorize as ações para a recuperação de seu ambiente em uma possível interrupção/desastre.
+    - Como sua equipe irá tratar a política de backup?
+    - Considerando possíveis instabilidades e problemas, descreva como alta disponibilidade será implementada em sua infraestrutura.
+
+<!-- a) -->
 <p align="jusitfy">
-Você é o CTO (Chief Technology Officer) de uma grande empresa com sede em várias capitais no Brasil e precisa implantar um sistema crítico, de baixo custo e com dados sigilosos para a área operacional.
+<b>a)</b> Para um <b>sistema crítico</b>, de <b>baixo custo</b> e que lida com <b>dados sigilosos</b> na área operacional, a escolha mais adequada é: <b>Private Cloud</b>. Justamente por conta de se tratar de <b>dados sensíveis</b> e haver a necessidade de estabelecer <b>medidas de segurança</b> específicas ao contexto da empresa, a opção mais segura seria optar pela Cloud privada.
 </p>
 
-a) Você escolheria Public Cloud ou Private Cloud?
-
-b) Agora explique para ao RH por que você precisa de um time de DevOps.
-
-<p align="jusitfy"> 
-c) Considerando o mesmo sistema crítico, agora sua equipe deverá planejar e implementar um ambiente resiliente e capaz de mitigar possíveis interrupções/indisponibilidades. Para isso, identifiquem quais são as principais ameaças que podem colocar sua infraestrutura em risco, e descreva as principais ações que possibilitem o restabelecimento de todas as aplicações de forma rápida e organizada caso algum evento cause uma interrupção ou incidente de segurança. Para isso monte um plano de DR e HA que considere entre as ações:
+<!-- b) -->
+<p align="jusitfy">
+<b>b)</b> E-mail para a equipe de RH
 </p>
 
-- Mapeamento das principais ameaças que podem colocar em riscos o seu ambiente.
-- Elenque e priorize as ações para a recuperação de seu ambiente em uma possível interrupção/desastre.
-- Como sua equipe irá tratar a política de backup?
-- Considerando possíveis instabilidades e problemas, descreva como alta disponibilidade será implementada em sua infraestrutura.
+!!! note "E-mail para a equipe de RH"
+    **Assunto:** Solicitação de equipe DevOps
+    
+    *Olá, equipe de RH, tudo bem?*
+
+    *No momento, nós da equipe de implementação do principal projeto da área de 
+    tecnologia e infraestrutura da empresa estivemos criando o plano de ação para 
+    como realizar podemos realizar este projeto da melhor forma possível, porém
+    utilizando somente os recursos estritamente necessários para a implementação
+    e chegamos a conclusão de que, para entregar um sistema crítico, seguro e de qualidade,
+    precisamos formar um time de <b>DevOps</b>.*
+
+    *Dado a escala do projeto, um time de DevOps seria essencial para podermos melhorar
+    a qualidade da entrega, eliminando gargalos e criando um fluxo contínuo de desenvolvimento,
+    reduzindo drasticamente o tempo de entrega de novas funcionalidades e correções críticas.
+    Isso traria um ambiente de trabalho mais eficiente e resultaria em uma maior segurança do sistema.*
+    
+    *Vocês poderiam abrir novas vagas ou realocar profissionais para esse
+    time o quanto antes?*
+
+    *Desde já agradeço!*  
+    *Atenciosamente,*
+    *CTO – Empresa TechnoCloud*
+
+
+<!-- c) -->
+<p align="justify">
+<b>c)</b> Para garantir que nosso sistema crítico sobreviva a falhas e se recupere rapidamente, vamos estruturar um <b>plano de recuperação de desastres (DR)</b> e <b>alta disponibilidade (HA)</b>. Vamos dividir este plano em quatro principais etapas:s
+</p>
+
+<h3>1. Mapeamento das Principais Ameaças</h3>
+<ul>
+  <li><b>Falhas de Hardware:</b> Pane em servidores (CPU, memória, disco) ou componentes de rede.</li>
+  <li><b>Interrupções de Energia/Climatéricas:</b> Quedas de energia, picos de tensão, enchentes, tempestades ou incêndios no datacenter.</li>
+  <li><b>Falhas de Software:</b> Bugs em atualizações do SO ou módulos críticos; corrupção de banco de dados.</li>
+  <li><b>Cyberataques:</b> Ransomware, DDoS, exploração de vulnerabilidades, acesso não autorizado.</li>
+  <li><b>Erro Humano:</b> Configuração incorreta de equipamentos, deploy incorreto de código, remoção acidental de dados.</li>
+  <li><b>Problemas de Rede/Telco:</b> Latência ou queda de links de Internet/MPLS entre capitais.</li>
+</ul>
+
+<h3>2. Plano de Ações para Recuperação (Prioridades)</h3>
+<ul>
+  <li><b>Prioridade 1 – Infraestrutura Básica (RTO curto):</b>
+    <ul>
+      <li>Fontes redundantes (UPS+gerador) e links de Internet múltiplos.</li>
+      <li>Datacenter primário + réplica ativa/stand-by em outra capital.</li>
+      <li>Sincronização contínua de VMs/containers (Storage Replication).</li>
+    </ul>
+  </li>
+  <li><b>Prioridade 2 – Camada de Aplicação e Banco (RTO médio):</b>
+    <ul>
+      <li>Cluster de banco primário com réplica (síncrona/semissíncrona) em DC secundário.</li>
+      <li>Load Balancer em modo ativo-ativo ou ativo-passivo; servidores de aplicação em múltiplas zonas.</li>
+    </ul>
+  </li>
+  <li><b>Prioridade 3 – Integrações e Serviços Externos (RTO estendido):</b>
+    <ul>
+      <li>Contêineres orquestrados replicados (Kubernetes/OpenShift) em ambas localidades.</li>
+      <li>Circuit Breakers para degradar funcionalidades não críticas em alta latência.</li>
+      <li>Fila de mensageria (Kafka/RabbitMQ) replicada; políticas de retry e DLQ.</li>
+    </ul>
+  </li>
+  <li><b>Prioridade 4 – Serviços de Suporte (RTO menos crítico):</b>
+    <ul>
+      <li>Elastic Stack (Elasticsearch+Kibana) espelhado entre DCs; Prometheus+Grafana replicados.</li>
+      <li>Active Directory/LDAP redundante; failover automático de DNS.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>3. Política de Backup</h3>
+<ul>
+  <li><b>Escopo e Frequência:</b>
+    <ul>
+      <li><em>Backup Diário (RPO ≤ 24h):</em> Dump full nos bancos relacionais + incremental a cada 4h; arquivos críticos (certificados, scripts) em repositório versionado + snapshot diário.</li>
+      <li><em>Backup Semanal (RPO ≥ 1 semana):</em> Arquivos de auditoria e relatórios em backup full semanal; retenção de 8 semanas.</li>
+      <li><em>Backup Mensal (RPO ≥ 1 mês):</em> Snapshots de VMs (templates/golden images) em fita virtual ou storage de arquivamento.</li>
+    </ul>
+  </li>
+  <li><b>Local de Armazenamento:</b>
+    <ul>
+      <li><em>On-Site:</em> NAS com RAID + VLAN exclusiva para tráfego de backup.</li>
+      <li><em>Off-Site:</em> Cópias diárias criptografadas (AES-256) por VPN para DR site em outra capital; opcionalmente, terceiro datacenter geograficamente distante (~200 km).</li>
+    </ul>
+  </li>
+  <li><b>Armazenamento e Retenção:</b>
+    <ul>
+      <li>Full mensal com retenção de 12 meses; backups semanais retidos por 8 semanas; diários retidos por 14 dias.</li>
+      <li>RPO máximo de 4 horas para dados críticos; 24 h para configurações.</li>
+    </ul>
+  </li>
+  <li><b>Testes de Restauração:</b>
+    <ul>
+      <li>Restauração completa em homologação a cada 3 meses.</li>
+      <li>Simulação de perda total do datacenter primário ao menos uma vez ao ano.</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>4. Implementação de Alta Disponibilidade (HA)</h3>
+<ul>
+  <li><b>Camada de Rede e Balanceamento:</b>
+    <ul>
+      <li>Load Balancers redundantes (ativo-passivo ou ativo-ativo) em DCs diferentes com health checks a cada 30 s e failover de VIP.</li>
+      <li>Multipath Routing via BGP multipath entre ISPs distintos.</li>
+    </ul>
+  </li>
+  <li><b>Camada de Aplicação:</b>
+    <ul>
+      <li>Cluster de contêineres/VMs autoescaláveis em duas ou mais capitais, orquestrados por K8s/OpenShift/VMware Tanzu.</li>
+      <li>Autoscaling baseado em métricas (CPU, memória, tempo de resposta) para escalar horizontalmente.</li>
+    </ul>
+  </li>
+  <li><b>Camada de Banco de Dados e Armazenamento:</b>
+    <ul>
+      <li>Cluster primário com réplica síncrona em DC secundário; promoção automática de réplica se o primário falhar.</li>
+      <li>Storage compartilhado (NAS/SAN) replicado (GlusterFS, Ceph ou soluções dedicadas) com acesso em múltiplos hosts.</li>
+    </ul>
+  </li>
+  <li><b>Camada de Serviços de Suporte:</b>
+    <ul>
+      <li>DNS dinâmico apontando para múltiplos IPs de balanceadores com TTL baixo (30-60 s) para failover rápido.</li>
+      <li>Identity Provider redundante (LDAP/AD) sincronizando contas em tempo real; controlador de domínio secundário assume automaticamente.</li>
+    </ul>
+  </li>
+  <li><b>Monitoramento e Orquestração de Failover:</b>
+    <ul>
+      <li>Monitoramento 24×7 (Zabbix/Prometheus) com alertas e dashboards (Grafana).</li>
+      <li>Playbooks de resposta a incidentes (runbooks) para cada tipo de falha; drills trimestrais.</li>
+      <li>Orquestração de failover automático (Pacemaker/Corosync, Keepalived, K8s Operators) para cenários de falha simples.</li>
+    </ul>
+  </li>
+</ul>
