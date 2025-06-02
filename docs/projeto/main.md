@@ -25,6 +25,7 @@ Avaliar o domínio dos alunos em:
     <li>Estruturação de aplicação web com FastAPI</li>
     <li>Boas práticas de código, documentação e custo</li>
 </ul>
+----
 
 ## Entrega 1
 
@@ -194,6 +195,186 @@ Caso tenha curiosidade, é possível encontrar o projeto nos links:
     </li>
     <li>
         <a href="https://hub.docker.com/repository/docker/antoniolma/app/" target="_blank">Link projeto DockerHub</a>
+    </li>
+</ul>
+</p>
+----
+
+## Entrega 2
+
+### Projeto FastAPI no AWS Lightsail
+
+<p align="justify">
+A parte 2 do projeto consiste em:
+</p>
+
+<ul>
+    <li>
+        Implantar sua aplicação (ex:FastAPI) utilizando o <b>AWS Lightsail Container Service</b>.
+    </li>
+    <li>
+        Configurar um <b>banco de dados</b> gerenciado (ex:PostgreSQL) no Lightsail.
+    </li>
+    <li>
+        Conectar sua aplicação ao banco de dados.
+    </li>
+    <li>
+        Gerenciar e monitorar o custo do serviço em produção. (Sua conta não pode gastar mais de 50 dolares mês)
+    </li>
+</ul>
+
+<p align="justify">
+Após criar o usuário na <b>AWS</b> e obter as credenciais necessárias para fazer o login na conta, foi iniciado o processo de criação do <b>Container</b> da aplicação feita na Entrega 1.
+</p>
+
+
+### Container
+
+<p align="justify">
+Dentro do <b>Lightsail</b>, clicando em <b>Create container service</b>, foram escolhidas as seguintes configurações:
+</p>
+
+<ul>
+    <li>
+        <b>Service name</b>: <code>fastapi-service</code>.
+    </li>
+    <li>
+        <b>Power</b>: <code>Nano</code> (varia de acordo com a necessidade do projeto).
+    </li>
+    <li>
+        <b>Scale</b>: <code>1</code> (Número de instâncias).
+    </li>
+</ul>
+
+![Configuração do Container - AWS](./img/container_aws.png)
+/// caption
+Configuração do <b>container</b> (<b>Lightsail</b>)
+///
+
+<p align="justify">
+Ao criar o Container, inicialmente não foi definido nenhum deploy inicial em sua configuração, isso foi feito somente após a criação do <b>Database</b> e ter seu endpoint.
+</p>
+
+
+### Database
+<p align="justify">
+Na aba <b>Databases</b>, dentro do Lightsail, foi criado um banco de dados com as seguintes configurações:
+</p>
+
+<ul>
+    <li>
+        <b>Database engine</b>: <code>PostgreSQL</code> (porta <code>5432</code>).
+    </li>
+    <li>
+        <b>Database name</b>: <code>cloud</code>.
+    </li>
+    <li>
+        <b>Master username</b>: <code>cloud</code>.
+    </li> 
+    <li>
+        <b>Availability zone</b>: <code>A mesma da aplicação</code>.
+    </li> 
+    <li>
+        <b>Public mode</b>: <code>Ative para permitir conexões externas</code>.
+    </li> 
+</ul>
+
+![Configuração do Database - AWS](./img/database_aws.png)
+/// caption
+Configuração do <b>database</b> (<b>Lightsail</b>)
+///
+
+<p align="justify">
+Após um breve período de espera, o <b>Database</b> estava no ar.
+</p>
+
+<p align="justify">
+Com isso, anotamos o <code>endpoint</code> do banco de dados, o <code>nome de usuário</code> e <code>senha</code>, para realizar o deploy final do container com a imagem do <b>DockerHub</b> se comunicando com o banco de dados na AWS.
+</p>
+
+
+### First Deployment (Container)
+
+<p align="justify">
+Entrando no nosso <b>Container</b>, foi realizado a modificação do deploy para que a aplicação conseguisse conversar com a aplicação.
+</p>
+
+<p align="justify">
+Essa modificação consistiu na alteração de alguns campos:
+</p>
+
+<ul>
+    <li>
+        <b>Container name</b>: <code>fastapi-container</code>.
+    </li>
+    <li>
+        <b>Image</b>: <code>antoniolma/app:v3.0.0</code>.
+    </li>
+    <li> Environment variables:
+        <ul>
+            <li>
+                <b>DATABASE_URL</b>:
+                <div>
+                    <code>postgresql://cloud:${POSTGRES_PASSWORD}@${AWS_ENDPOINT}:5432/dbmaster</code>.
+                </div>
+            </li> 
+            <li>
+                <b>ALGORITHM</b>: <code>HS256</code>.
+            </li> 
+            <li>
+                <b>SECRET_KEY</b>: Key secreta para codificar as senhas dos usuários para HASH's.
+            </li>
+            <li>
+                <b>AWESOME_API_KEY</b>: Key para API de consulta do <code>dólar</code> e <code>euro</code>.
+            </li>
+        </ul>
+    </li>
+    <li>
+        Open Ports:
+        <ul>
+            <b>Port</b>: <code>80</code> - <b>Protocol</b>: <code>HTTP</code>
+        </ul>
+    </li>
+    <li>
+        Healt check path:
+        <ul>
+            <code>/health-check</code>
+        </ul>
+    </li>
+</ul>
+
+![First Deployment - AWS](./img/fd_aws.png)
+/// caption
+Configuração do <b>Deployment</b> do container (<b>Lightsail</b>)
+///
+
+![Deploy da Imagem - AWS](./img/deploy_aws.png)
+/// caption
+Deploy finalizado com <b>Status: ✅ Active</b>
+///
+
+### Testando o deploy
+
+<figure>
+  <iframe
+    width="960"
+    height="540"
+    src="https://www.youtube.com/embed/SDeaN7R0M1I"
+    title="Vídeo testando o Deploy na AWS"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>
+  <figcaption>Vídeo testando o Deploy na <b>AWS</b></figcaption>
+</figure>
+
+<p align="justify">
+Caso tenha curiosidade, é possível encontrar o deploy no link:
+<ul>
+    <li>
+        <a href="https://fastapi-service.41apj1zjxa7qj.us-east-1.cs.amazonlightsail.com/">
+            https://fastapi-service.41apj1zjxa7qj.us-east-1.cs.amazonlightsail.com/
+        </a>
     </li>
 </ul>
 </p>
