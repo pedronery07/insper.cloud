@@ -353,6 +353,16 @@ Configuração do <b>Deployment</b> do container (<b>Lightsail</b>)
 Deploy finalizado com <b>Status: ✅ Active</b>
 ///
 
+![Diagrama- AWS](./img/diagrama_aws.png)
+/// caption
+Diagrama 
+///
+
+<p align="justify">
+Com a aplicação agora no ar, podemos fazer alguns testes parar verificar se tudo está funcionando como deveria.
+</p>
+
+
 ### Testando o deploy
 
 <figure>
